@@ -1,20 +1,36 @@
+"use client";
 import ButtonLink from "@/components/ButtonLink";
-import Nav from "@/components/Nav";
+// import Nav from "@/components/Nav";
 import { Table, Tbody, Td, Th, Thead, Trow } from "@/components/Table";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/client";
+import { ComponentState, useEffect, useState } from "react";
 
-export default async function StockIn() {
-  const superbase = createClient();
-  const { data: stock_in, error } = await superbase
-    .from("stock_in")
-    .select(
-      `id, supplier_id, product_id, unit_price, quantity, products(*), suppliers(*), created_at`
-    );
-  // return JSON.stringify(stock_in);
+export default function StockIn() {
+  // const [stockIn, setStokcIn] = useState([]);
+  const [stockIn, setStokcIn] = useState<ComponentState[]>([]);
+
+  useEffect(() => {
+    const getData = async () => {
+      const superbase = createClient();
+
+      const { data, error } = await superbase
+        .from("stock_in")
+        .select(
+          `id, supplier_id, product_id, unit_price, quantity, products(*), suppliers(*), created_at`
+        );
+      if (error) {
+        return; // Exit if error occurs during data fetching
+      }
+      setStokcIn(data);
+    };
+    getData();
+  }, []);
+
   return (
     <div className="w-full max-w-4xl flex flex-col">
-      <Nav />
+      {/* <Nav /> */}
       <div className="flex w-full items-center gap-3 my-6">
+        <ButtonLink variant="light" href="/stock/in">Kembali</ButtonLink>
         <ButtonLink href="/stock/in/report">Cetak</ButtonLink>
       </div>
       <Table>
@@ -22,7 +38,6 @@ export default async function StockIn() {
           <Trow>
             <Th>No</Th>
             <Th>Nama Barang</Th>
-            <Th>Toko/Agen</Th>
             <Th>Supplier</Th>
             <Th>Harga</Th>
             <Th>Jumlah</Th>
@@ -31,11 +46,10 @@ export default async function StockIn() {
           </Trow>
         </Thead>
         <Tbody>
-          {stock_in?.map((item, index) => (
+          {stockIn?.map((item, index) => (
             <Trow key={index}>
               <Td>{(index += 1)}</Td>
               <Td>{item.products?.name}</Td>
-              <Td>{item.outlets?.name}</Td>
               <Td>{item.suppliers?.name}</Td>
               <Td>{item.unit_price}</Td>
               <Td>{item.quantity}</Td>
