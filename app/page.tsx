@@ -6,6 +6,7 @@ import SignUpUserSteps from "@/components/tutorial/SignUpUserSteps";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
+import ButtonLink from "@/components/ButtonLink";
 
 export default async function Index() {
   const canInitSupabaseClient = () => {
@@ -29,7 +30,14 @@ export default async function Index() {
         <Header />
         <main className="flex-1 flex flex-col gap-6">
           <h2 className="font-bold text-4xl mb-4">Next steps</h2>
-          {isSupabaseConnected ? <SignUpUserSteps /> : <ConnectSupabaseSteps />}
+          <div className="flex w-full items-center gap-3 my-6">
+            <ButtonLink variant="light" href="/stock/in">
+              Stok Masuk
+            </ButtonLink>
+            <ButtonLink variant="light" href="/stock/out">
+              Stok Keluar
+            </ButtonLink>
+          </div>
         </main>
       </div>
 

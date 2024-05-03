@@ -22,11 +22,10 @@ const SortIcon = () => {
 export default async function Supplier() {
   const superbase = createClient();
   const { data: suppliers } = await superbase.from("suppliers").select();
-  //   return <pre>{JSON.stringify(notes, null, 2)}</pre>;
   return (
-      <div className="w-full max-w-4xl flex flex-col">
+    <div className="w-full max-w-4xl flex flex-col">
       <Nav />
-      
+
       <Table>
         <Thead>
           <Trow>
@@ -34,16 +33,16 @@ export default async function Supplier() {
             <Th>Nama</Th>
             <Th>Alamat</Th>
           </Trow>
-          <Tbody>
-            {suppliers?.map((item, index) => (
-              <Trow key={index}>
-                <Td>{index += 1}</Td>
-                <Td>{item.name}</Td>
-                <Td>{item.address}</Td>
-              </Trow>
-            ))}
-          </Tbody>
         </Thead>
+        <Tbody>
+          {suppliers?.map((item, index) => (
+            <Trow key={index}>
+              <Td>{(index += 1)}</Td>
+              <Td>{item.name}</Td>
+              <Td>{item.address}</Td>
+            </Trow>
+          ))}
+        </Tbody>
       </Table>
     </div>
   );
