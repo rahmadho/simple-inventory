@@ -10,24 +10,22 @@ export const StoreStockIn = async (formData: FormData) => {
     unit_price: formData.get("unit_price"),
     quantity: formData.get("quantity"),
   };
+  console.log(rawData);
 
   const superbase = createClient();
-  
+  let message = ''
   try {
     const { data, error } = await superbase.from("stock_in").insert([rawData]);
     if (error) {
       console.error("Error ketika menyimpan data stock in:", error);
-      return redirect("/stock/in?msg=Gagal menyimpan data");
+      message = 'Gagal menyimpan data'
     } else {
       console.info('Berhasil menyimpan stock in');
-      return redirect("/stock/in?msg=Berhasil menyimpan data");
+      message = 'Berhasil menyimpan data'
     }
   } catch (error) {
+    message = 'Terjadi kesalahan, coba lagin nanti'
     console.error("Gagal menyimpan data stock in:", error);
-    if (error instanceof Error) {
-      return redirect(`/stock/in?msg=${error.message}`);
-    } else {
-      return redirect(`/stock/in?msg=Terjadi kesalahan`);
-    }
   }
-};
+  return redirect(`/stock/in?msg=${message}`);
+}

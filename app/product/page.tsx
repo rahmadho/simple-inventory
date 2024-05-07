@@ -3,6 +3,7 @@ import ButtonLink from "@/components/ButtonLink";
 import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
 import { Table, Tbody, Td, Th, Thead, Trow } from "@/components/Table";
+import { formatRupiah } from "@/utils/helpers/format";
 import { createClient } from "@/utils/supabase/server";
 
 export default async function Product({
@@ -37,7 +38,7 @@ export default async function Product({
                 <Trow key={index}>
                   <Td>{index += 1}</Td>
                   <Td>{item.name}</Td>
-                  <Td>{item.selling_price}</Td>
+                  <Td>Rp. {formatRupiah(item.selling_price)}</Td>
                   <Td>{item.stock}</Td>
                 </Trow>
               ))}

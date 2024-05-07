@@ -1,34 +1,19 @@
-"use client";
 import ButtonLink from "@/components/ButtonLink";
-// import Nav from "@/components/Nav";
+import Nav from "@/components/Nav";
 import { Table, Tbody, Td, Th, Thead, Trow } from "@/components/Table";
-import { createClient } from "@/utils/supabase/client";
-import { ComponentState, useEffect, useState } from "react";
+import { formatRupiah, formatTanggal } from "@/utils/helpers/format";
+import { createClient } from "@/utils/supabase/server";
 
-export default function StockIn() {
-  // const [stockIn, setStokcIn] = useState([]);
-  const [stockIn, setStokcIn] = useState<ComponentState[]>([]);
+export default async function Page() {
+  const supabase = createClient()
+  const { data: stockIn, error } = await supabase.from("stock_in").select(
+    `id, supplier_id, product_id, unit_price, quantity, products(*), suppliers(*), created_at`
+  );
 
-  useEffect(() => {
-    const getData = async () => {
-      const superbase = createClient();
-
-      const { data, error } = await superbase
-        .from("stock_in")
-        .select(
-          `id, supplier_id, product_id, unit_price, quantity, products(*), suppliers(*), created_at`
-        );
-      if (error) {
-        return; // Exit if error occurs during data fetching
-      }
-      setStokcIn(data);
-    };
-    getData();
-  }, []);
 
   return (
     <div className="w-full max-w-4xl flex flex-col">
-      {/* <Nav /> */}
+      <Nav />
       <div className="flex w-full items-center gap-3 my-6">
         <ButtonLink variant="light" href="/stock/in">Kembali</ButtonLink>
         <ButtonLink href="/stock/in/report">Cetak</ButtonLink>
@@ -37,8 +22,8 @@ export default function StockIn() {
         <Thead>
           <Trow>
             <Th>No</Th>
-            <Th>Nama Barang</Th>
-            <Th>Supplier</Th>
+            <Th className="text-nowrap">Nama Barang</Th>
+            <Th className="text-nowrap">Supplier</Th>
             <Th>Harga</Th>
             <Th>Jumlah</Th>
             <Th>Total</Th>
@@ -49,12 +34,12 @@ export default function StockIn() {
           {stockIn?.map((item, index) => (
             <Trow key={index}>
               <Td>{(index += 1)}</Td>
-              <Td>{item.products?.name}</Td>
-              <Td>{item.suppliers?.name}</Td>
-              <Td>{item.unit_price}</Td>
+              <Td className="text-nowrap">{item.products?.name}</Td>
+              <Td className="text-nowrap">{item.suppliers?.name}</Td>
+              <Td className="text-nowrap">Rp {formatRupiah(item.unit_price)}</Td>
               <Td>{item.quantity}</Td>
-              <Td>{item.unit_price * item.quantity}</Td>
-              <Td>{item.created_at}</Td>
+              <Td className="text-nowrap">Rp {formatRupiah(item.unit_price * item.quantity)}</Td>
+              <Td className="text-nowrap">{formatTanggal(item.created_at)}</Td>
             </Trow>
           ))}
         </Tbody>

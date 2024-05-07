@@ -13,6 +13,7 @@ export const StoreStockOut = async (formData: FormData) => {
     };
 
     const superbase = createClient();
+    let message = 'Flash Message';
 
     try {
       // cek stok apakah mencukupi
@@ -22,21 +23,22 @@ export const StoreStockOut = async (formData: FormData) => {
         const { data, error } = await superbase.from("stock_out").insert([rawData]);
         if (error) {
             console.error("Error ketika menyimpan stock out:", error);
-            return redirect("/stock/out?msg=Gagal menyimpan data");
+            message = 'Gagal menyimpan data'
         } else {
             console.info("Berhasil menyimpan stock out");
-            return redirect("/stock/out?msg=Berhasil menyimpan data");
+            message = `Berhasil menyimpan data. Stok barang diupdate [-${rawData.quantity}]`
         }
       } else {
         console.info("Stock out tidak cukup");
-        return redirect("/stock/out?msg=Tidak ditemukan atau stok tidak cukup");
+        message = 'Tidak ditemukan atau stok tidak cukup'
       }
     } catch (error) {
       console.error("Gagal menyimpan data stock out:", error);
       if (error instanceof Error) {
-        return redirect(`/stock/out?msg=${error.message}`);
+        message = error.message
       } else {
-        return redirect(`/stock/out?msg=Terjadi kesalahan`);
+        message = 'Terjadi kesalahan, coba lagi nanti'
       }
     }
+    return redirect(`/stock/out?msg=${message}`);
   };

@@ -1,5 +1,5 @@
 import Button from "@/components/Button";
-import Input from "@/components/Input";
+import Input, { InputPrice } from "@/components/Input";
 import Label from "@/components/Label";
 import Nav from "@/components/Nav";
 import { createClient } from "@/utils/supabase/server";
@@ -69,7 +69,8 @@ export default async function StockIn({
           </div>
           <div className="mb-6">
             <Label htmlFor="unit_price">Harga</Label>
-            <Input type="number" id="unit_price" name="unit_price" />
+            {/* <Input type="number" id="unit_price" name="unit_price" /> */}
+            <InputPrice id="unit_price" name="unit_price" />
           </div>
           <div className="mb-6">
             <label

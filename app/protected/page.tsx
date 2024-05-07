@@ -15,6 +15,9 @@ export default async function ProtectedPage() {
   if (!user) {
     return redirect("/login");
   }
+  const auth = {
+    email: user.email
+  }
 
   return (
     <div className="flex-1 w-full flex flex-col gap-20 items-center">
@@ -26,7 +29,7 @@ export default async function ProtectedPage() {
         <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
           <div className="w-full max-w-4xl flex justify-between items-center p-3 text-sm">
             <DeployButton />
-            <AuthButton />
+            <AuthButton user={auth} />
           </div>
         </nav>
       </div>

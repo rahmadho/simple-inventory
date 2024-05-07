@@ -1,3 +1,4 @@
+'use client'
 import Input from "@/components/Input";
 import Label from "@/components/Label";
 import { useEffect, useState } from "react";
@@ -17,10 +18,8 @@ export default function InputPriceStockOut({value}: {value: any}) {
             type="number"
             id="unit_price"
             name="unit_price"
+            value={price}
             onChange={(e) => setPrice(e.target.value)} />
-            <span className="font-semibold text-slate-400 cursor-pointer" onClick={() => setPrice('20000')}>
-            Rp. 20.000
-            </span>
         </div>
     );
   }

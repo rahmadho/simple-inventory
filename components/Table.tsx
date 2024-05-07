@@ -36,15 +36,19 @@ const Trow = ({ children, ...props }: ComponentProps<"tr"> & {}) => {
     );
 }
 const Th = ({ children, ...props }: ComponentProps<"th"> & {}) => {
+    const baseClassName = 'px-6 py-3'; // Internal class name
+    const mergedClassName = `${baseClassName} ${props.className || ''}`;
     return (
-        <th className="px-6 py-3" {...props}>
+        <th {...props} className={mergedClassName}>
           {children}
         </th>
     );
 }
 const Td = ({ children, ...props }: ComponentProps<"td"> & {}) => {
+    const baseClassName = 'px-6 py-3'; // Internal class name
+    const mergedClassName = `${baseClassName} ${props.className || ''}`;
     return (
-        <td className="px-6 py-3" {...props}>
+        <td className={mergedClassName}>
           {children}
         </td>
     );
