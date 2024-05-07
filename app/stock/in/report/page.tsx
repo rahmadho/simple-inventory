@@ -3,13 +3,19 @@ import Nav from "@/components/Nav";
 import { Table, Tbody, Td, Th, Thead, Trow } from "@/components/Table";
 import { formatRupiah, formatTanggal } from "@/utils/helpers/format";
 import { createClient } from "@/utils/supabase/server";
+import { Database } from "@/utils/supabase/types";
 
 export default async function Page() {
   const supabase = createClient()
-  const { data: stockIn, error } = await supabase.from("stock_in").select(
-    `id, supplier_id, product_id, unit_price, quantity, products(*), suppliers(*), created_at`
-  );
+  
+  type StockInType = Database["public"]["Tables"]["stock_in"]["Row"];
+  type ProductType = Database["public"]["Tables"]["products"]["Row"];
+  type SupplierType = Database["public"]["Tables"]["suppliers"]["Row"];
+  type CollectType = StockInType & {products: ProductType} & {suppliers: SupplierType}
 
+  const {data: stockIn, error} = await supabase.from("stock_in").select( `*, products(*), suppliers(*)` )
+    .returns<CollectType[]>();
+  if (error) throw error
 
   return (
     <div className="w-full max-w-4xl flex flex-col">
@@ -32,13 +38,14 @@ export default async function Page() {
         </Thead>
         <Tbody>
           {stockIn?.map((item, index) => (
+            
             <Trow key={index}>
               <Td>{(index += 1)}</Td>
               <Td className="text-nowrap">{item.products?.name}</Td>
               <Td className="text-nowrap">{item.suppliers?.name}</Td>
               <Td className="text-nowrap">Rp {formatRupiah(item.unit_price)}</Td>
               <Td>{item.quantity}</Td>
-              <Td className="text-nowrap">Rp {formatRupiah(item.unit_price * item.quantity)}</Td>
+              <Td className="text-nowrap">Rp {formatRupiah((item.unit_price ?? 0) * (item.quantity ?? 0))}</Td>
               <Td className="text-nowrap">{formatTanggal(item.created_at)}</Td>
             </Trow>
           ))}
